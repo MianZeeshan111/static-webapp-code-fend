@@ -1,0 +1,58 @@
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3-Tier App - Sarim (Apache/Ubuntu)</title>
+</head>
+<body>
+    <h1>Welcome to 3-Tier Application</h1>
+    <p><em>Served via Apache2 on Ubuntu Server (Azure VM)</em></p>
+    <h2>Add Student</h2>
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="text" id="city" placeholder="Enter City">
+    <input type="text" id="course" placeholder="Enter Course">
+    <button onclick="addStudent()">Add Student</button>
+
+    <h2>Students List</h2>
+    <div id="studentsList"></div>
+
+    <script>
+        function getStudents() {
+            fetch('http://192.14.0.12:3000/students')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('studentsList').innerHTML =
+                JSON.stringify(data);
+            });
+        }
+
+        function addStudent() {
+            const name = document.getElementById('name').value;
+            const city = document.getElementById('city').value;
+            const course = document.getElementById('course').value;
+            fetch('http://192.14.0.12:3000/students', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, city, course})
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Student Added!');
+                getStudents();
+            });
+        }
+
+        getStudents();
+    </script>
+</body>
+</html>
